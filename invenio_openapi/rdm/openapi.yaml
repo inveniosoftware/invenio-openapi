@@ -17,7 +17,7 @@ servers:
   description: InvenioRDM instance
   variables:
     baseURL:
-      default: https://127.0.0.1:5000
+      default: https://inveniordm.web.cern.ch/
       description: Base URL of your InvenioRDM instance
 paths:
   /api/communities/{communityId}/logo:
