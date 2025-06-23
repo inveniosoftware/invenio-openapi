@@ -130,7 +130,7 @@ paths:
       summary: Get Featured Community Entry
       tags:
       - Featured Communities
-      operationId: createAFeaturedCommunityEntryV11Beta
+      operationId: getFeaturedCommunityEntry
       parameters:
       - name: communityId
         in: path
@@ -1080,7 +1080,7 @@ paths:
         description: Unique identifier for the community
       - name: q
         in: query
-        required: true
+        required: false
         schema:
           type: string
         description: metadata.publication_date:[YYYY-MM-DD TO *] - Search for records
@@ -3568,7 +3568,7 @@ paths:
       - BearerAuth: []
   /api/subjects/{vocSubjectsId}:
     get:
-      summary: X Specific vocabularies subjects by ID
+      summary: Specific vocabularies subjects by ID
       tags:
       - Vocabularies
       operationId: xSpecificVocabulariesSubjectsById
@@ -3836,7 +3836,7 @@ components:
     NoContent:
       description: No content - Operation completed successfully
     Conflict:
-      description: Conflict - Resource already exists or operation conflicts - Resource already exists or operation conflicts
+      description: Conflict - Resource already exists or operation conflicts
   schemas: {}
 security:
 - BearerAuth: []
