@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2025 KTH.
+# Copyright (C) 2025 KTH Royal Institute of Technology.
+# Copyright (C) 2025 CERN.
 #
 # Invenio-openapi is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -3809,6 +3810,86 @@ paths:
                   start_date: '{{$randomDateRecent}}'
                   end_date: '{{$randomDateFuture}}'
                   recid: '{{record-id}}'
+  /api/audit-logs:
+    get:
+      summary: Search Logs (Admins only)
+      description: Search and filter audit log entries based on various parameters.
+      tags:
+      - Audit Logs
+      operationId: searchLogs
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search query used to filter audit log entries
+        example: abcd-1234
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Specify number of items in the results page (default: 10)'
+        example: '10'
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Specify the page of results
+        example: '1'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Sort search results. Built-in options are "newest", "oldest" (default: "newest")'
+        example: newest
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
+  /api/audit-logs/{logId}:
+    get:
+      summary: Retrieve Log Entry (Admins only)
+      description: Retrieve a specific audit log entry by its unique identifier.
+      tags:
+      - Audit Logs
+      operationId: retrieveLogEntry
+      parameters:
+      - name: logId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier for the audit log entry
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
 components:
   securitySchemes:
     BearerAuth:
@@ -3890,3 +3971,5 @@ tags:
   description: Record Version management
 - name: Vocabularies
   description: Vocabulary and controlled terms endpoints
+- name: Audit Logs
+  description: Audit log entries and search
