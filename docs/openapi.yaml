@@ -2422,7 +2422,7 @@ paths:
               type: object
             example:
               payload:
-                content: You are in!
+                content: Your request has been accepted!
                 format: html
       security:
       - BearerAuth: []
@@ -2460,7 +2460,7 @@ paths:
               type: object
             example:
               payload:
-                content: You are in!
+                content: Your request has been cancelled!
                 format: html
       security:
       - BearerAuth: []
@@ -2498,7 +2498,7 @@ paths:
               type: object
             example:
               payload:
-                content: You are not in!
+                content: Your request has been declined!
                 format: html
       security:
       - BearerAuth: []
