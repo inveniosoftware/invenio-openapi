@@ -283,7 +283,7 @@ paths:
             schema:
               type: object
             example:
-              start_date: '2024-06-11 10:13:13.945755'
+              start_date: '2024-06-11T10:13:13.945Z'
       security:
       - BearerAuth: []
     delete:
@@ -2887,7 +2887,7 @@ paths:
       - BearerAuth: []
   /api/groups/{groupId}:
     get:
-      summary: Get  group by ID
+      summary: Get group by ID
       tags:
       - Groups
       operationId: getGroupById
@@ -3571,7 +3571,7 @@ paths:
       summary: Specific vocabularies subjects by ID
       tags:
       - Vocabularies
-      operationId: xSpecificVocabulariesSubjectsById
+      operationId: specificVocabulariesSubjectsById
       parameters:
       - name: vocSubjectsId
         in: path
