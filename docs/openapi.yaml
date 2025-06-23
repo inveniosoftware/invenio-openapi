@@ -15,18 +15,22 @@ info:
 
     ## **Resources**
 
-    - 📚 [Complete Documentation](https://inveniordm.docs.cern.ch/reference/rest_api_index/)
+    - 📚 [Complete Documentation](https://inveniordm.docs.cern.ch/reference/rest_api_index)
 
     - 🔗 [GitHub Repository](https://github.com/inveniosoftware/invenio-openapi)
 
-    - 🌐 [InvenioRDM Project](https://inveniosoftware.org/)
+    - 🌐 [InvenioRDM Project](https://inveniosoftware.org)
 
     - 💬 [Community Support](https://discord.gg/8qatqBC)'
 
   version: 12.0.0
   contact:
     name: InvenioRDM Documentation
-    url: https://inveniordm.docs.cern.ch/
+    url: https://inveniordm.docs.cern.ch
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  x-copyright: KTH Royal Institute of Technology 2025
   x-repo: https://github.com/Samk13/invenio-api-toolkit
 servers:
 - url: '{baseURL}'
