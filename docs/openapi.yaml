@@ -1761,9 +1761,10 @@ paths:
         example: is_published:false
       - name: search
         in: query
-        required: true
+        required: false
         schema:
           type: string
+        description: Search query used to filter user records, typically by persistent identifier or other record fields.
         example: pids.doi.identifier:example-doi-123
       responses:
         '200':
