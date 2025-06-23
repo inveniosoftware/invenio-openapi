@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2025 KTH.
+# Copyright (C) 2025 KTH Royal Institute of Technology.
+# Copyright (C) 2025 CERN.
 #
 # Invenio-openapi is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details.
@@ -3809,6 +3810,94 @@ paths:
                   start_date: '{{$randomDateRecent}}'
                   end_date: '{{$randomDateFuture}}'
                   recid: '{{record-id}}'
+  /api/audit-logs:
+    get:
+      summary: Search Logs (Admins only)
+      description: Search and filter audit log entries based on various parameters.
+      tags:
+      - Audit Logs
+      operationId: searchLogs
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Search query used to filter audit log entries
+        example: abcd-1234
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Specify number of items in the results page (default: 10)'
+        example: '10'
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Specify the page of results
+        example: '1'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Sort search results. Built-in options are "newest", "oldest" (default: "newest")'
+        example: newest
+      responses:
+        '200':
+          description: Successful response with audit log entries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
+  /api/audit-logs/{logId}:
+    get:
+      summary: Retrieve Log Entry (Admins only)
+      description: Retrieve a specific audit log entry by its unique identifier.
+      tags:
+      - Audit Logs
+      operationId: retrieveLogEntry
+      parameters:
+      - name: logId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique identifier for the audit log entry
+      responses:
+        '200':
+          description: Successful response with audit log entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogEntry'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - BearerAuth: []
 components:
   securitySchemes:
     BearerAuth:
@@ -3840,9 +3929,94 @@ components:
             type: object
     NoContent:
       description: No content - Operation completed successfully
-    Conflict:
+  schemas:
+    AuditLogList:
+      type: object
+      properties:
+        hits:
+          type: object
+          properties:
+            total:
+              type: integer
+              description: Total number of log entries
+            hits:
+              type: array
+              items:
+                $ref: '#/components/schemas/AuditLogEntry'
+        aggregations:
+          type: object
+          description: Aggregation results (if any)
+    AuditLogEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the log entry
+          example: "9913abd2-1a7c-42cb-a73e-e48a9e1bf4f2"
+        created:
+          type: string
+          format: date-time
+          description: Timestamp when the log entry was created
+          example: "2025-06-20T08:05:27.730677+00:00"
+        action:
+          type: string
+          description: Action performed
+          example: "record.publish"
+        resource:
+          type: object
+          description: Resource affected by the action
+          properties:
+            type:
+              type: string
+              description: Type of the resource
+              example: "record"
+            id:
+              type: string
+              description: ID of the resource
+              example: "5anb0-85626"
+        metadata:
+          type: object
+          description: Additional metadata about the log entry
+          properties:
+            ip_address:
+              type: string
+              description: IP address from which the action was performed
+            session:
+              type: string
+              description: Session identifier
+            parent_pid:
+              type: string
+              description: Parent persistent identifier
+              example: "1av3p-t2p41"
+            revision_id:
+              type: integer
+              description: Revision ID of the resource
+              example: 110
+        user:
+          type: object
+          description: User who performed the action
+          properties:
+            id:
+              type: string
+              description: User ID
+              example: "2"
+            username:
+              type: string
+              description: Username
+              example: "user"
+            email:
+              type: string
+              description: User email address
+              example: "user@demo.org"
+        links:
+          type: object
+          description: Links related to the log entry
+          properties:
+            self:
+              type: string
+              description: Self link to the log entry
+              example: "https://example.com/api/audit-logs/9913abd2-1a7c-42cb-a73e-e48a9e1bf4f2"
       description: Conflict - Resource already exists or operation conflicts
-  schemas: {}
 security:
 - BearerAuth: []
 tags:
@@ -3890,3 +4064,5 @@ tags:
   description: Record Version management
 - name: Vocabularies
   description: Vocabulary and controlled terms endpoints
+- name: Audit Logs
+  description: Audit log entries and search
