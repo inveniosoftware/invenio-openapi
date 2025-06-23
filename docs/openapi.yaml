@@ -13,7 +13,16 @@ info:
     The following document is a reference guide for all the REST APIs that InvenioRDM
     exposes.
 
-    see [complete documentation](https://inveniordm.docs.cern.ch/reference/rest_api_index/)'
+    ## **Resources**
+
+    - 📚 [Complete Documentation](https://inveniordm.docs.cern.ch/reference/rest_api_index/)
+
+    - 🔗 [GitHub Repository](https://github.com/inveniosoftware/invenio-openapi)
+
+    - 🌐 [InvenioRDM Project](https://inveniosoftware.org/)
+
+    - 💬 [Community Support](https://discord.gg/8qatqBC)'
+
   version: 12.0.0
   contact:
     name: InvenioRDM Documentation
