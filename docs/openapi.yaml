@@ -33,7 +33,7 @@ servers:
   description: InvenioRDM instance
   variables:
     baseURL:
-      default: https://inveniordm.web.cern.ch/
+      default: https://inveniordm.web.cern.ch
       description: Base URL of your InvenioRDM instance
 paths:
   /api/communities/{communityId}/logo:
@@ -2186,8 +2186,9 @@ paths:
           application/json:
             schema:
               type: object
-            example: "{\r\n  \"permission\": \"view\", // view, preview, edit\r\n\
-              \  \"expires_at\": \"2024-11-06\"\r\n}"
+            example:
+              permission: view
+              expires_at: '2024-11-06'
       security:
       - BearerAuth: []
     get:
