@@ -1,16 +1,13 @@
-# Invenio OpenAPI Documentation
+# Invenio/InvenioRDM OpenAPI documentation
 
 This repository contains the OpenAPI specification for InvenioRDM and a static Swagger UI site.
+At the moment, it is a manual effort.
 
-## Viewing the API Docs
+## Accessing the API docs
 
-GitHub Pages serves the site from the `docs/` folder on the `main` branch. Once Pages is enabled in the repository settings, visit:
+The Swagger interface is available via GitHub Pages at <https://inveniosoftware.github.io/invenio-openapi/>.
 
-```
-https://<your-github-username>.github.io/<repository-name>/
-```
-
-Replace `<your-github-username>` and `<repository-name>` with the appropriate values.
+By default, it is connected to the InvenioRDM demo website <https://inveniordm.web.cern.ch>. However, you can connect to your instance by changing the `baseURL` field in the web app.
 
 ## Preview Locally
 
