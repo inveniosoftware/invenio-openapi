@@ -13,6 +13,7 @@ inveniordm-rest-api = {editable = true, path="./site"}
 uwsgi = ">=2.0"
 uwsgitop = ">=0.11"
 uwsgi-tools = ">=1.1.1"
+apispec = {extras = ["marshmallow"]}
 
 [requires]
 python_version = "3.12"
