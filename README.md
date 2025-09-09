@@ -21,4 +21,4 @@ Then open `http://localhost:8000/docs/` in your browser.
 
 ## Updating the OpenAPI Spec
 
-Edit `rdm/openapi.yaml` to update the API definition. The Swagger UI page automatically reflects any changes committed to this file.
+Edit `docs/openapi.yaml` to update the API definition. The Swagger UI page automatically reflects any changes committed to this file.
