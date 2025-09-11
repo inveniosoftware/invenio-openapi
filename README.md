@@ -32,6 +32,7 @@ uv venv                                                           # create virtu
 source .venv/bin/activate                                         # activate it
 uv pip install invenio-cli                                        # install invenio-cli
 uv run invenio-cli install --pre                                  # install InvenioRDM
+uv pip install "apispec[marshmallow,yaml]"                        # install apispec
 uv run invenio shell scripts/generate_spec.py                     # generate the spec
 ```
 
