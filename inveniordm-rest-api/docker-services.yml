@@ -1,0 +1,95 @@
+services:
+  app:
+    build:
+      context: ./
+      args:
+        - ENVIRONMENT=DEV
+    image: inveniordm-rest-api
+    restart: "unless-stopped"
+    environment:
+      - "INVENIO_ACCOUNTS_SESSION_REDIS_URL=redis://cache:6379/1"
+      - "INVENIO_BROKER_URL=amqp://guest:guest@mq:5672/"
+      - "INVENIO_CACHE_REDIS_URL=redis://cache:6379/0"
+      - "INVENIO_CACHE_TYPE=redis"
+      - "INVENIO_CELERY_BROKER_URL=amqp://guest:guest@mq:5672/"
+      - "INVENIO_CELERY_RESULT_BACKEND=redis://cache:6379/2"
+      - "INVENIO_COMMUNITIES_IDENTITIES_CACHE_REDIS_URL=redis://cache:6379/4"
+      - "INVENIO_SEARCH_HOSTS=['search:9200']"
+      - "INVENIO_SECRET_KEY=CHANGE_ME"
+      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://inveniordm-rest-api:inveniordm-rest-api@db/inveniordm-rest-api"
+      - "INVENIO_WSGI_PROXIES=2"
+      - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
+  frontend:
+    build: ./docker/nginx/
+    image: inveniordm-rest-api-frontend
+    restart: "unless-stopped"
+    ports:
+      - "80"
+      - "443"
+  cache:
+    image: redis:7
+    restart: "unless-stopped"
+    read_only: true
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres:14.13
+    restart: "unless-stopped"
+    environment:
+      - "POSTGRES_USER=inveniordm-rest-api"
+      - "POSTGRES_PASSWORD=inveniordm-rest-api"
+      - "POSTGRES_DB=inveniordm-rest-api"
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4:6
+    restart: "unless-stopped"
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "info@inveniordm-rest-api.com"
+      PGADMIN_DEFAULT_PASSWORD: "inveniordm-rest-api"
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+  # note: RabbitMQ uses the hostname to build the Mnesia data directory path (cf. https://www.rabbitmq.com/docs/configure)
+  #       using a randomly generated hostname "forgets" about old queued messages (e.g. celery tasks) with new builds,
+  #       and hard-coding the Mnesia path with random hostnames leads to connection issues on startup for old names
+  mq:
+    image: rabbitmq:3-management
+    restart: "unless-stopped"
+    hostname: mq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  search:
+    image: opensearchproject/opensearch:2.17.1
+    restart: "unless-stopped"
+    environment:
+      # settings only for development. DO NOT use in production!
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "OPENSEARCH_INITIAL_ADMIN_PASSWORD=guekxe3mvqieke1!%&ieIADE"
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      - "DISABLE_SECURITY_PLUGIN=true"
+      - "discovery.type=single-node"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 2g
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.17.1
+    ports:
+      - "5601:5601"
+    expose:
+      - "5601"
+    environment:
+      # settings only for development. DO NOT use in production!
+      - 'OPENSEARCH_HOSTS=["http://search:9200"]'
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"

@@ -1,0 +1,106 @@
+# name: Generate OpenAPI Specs
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       invenio_version:
+#         description: 'InvenioRDM version to use'
+#         required: false
+#         default: 'latest'
+#         type: string
+  
+#   schedule:
+#     - cron: '0 0 1 * *'
+  
+#   push:
+#     paths:
+#       - 'inveniordm-rest-api/scripts/**'
+#       - '.github/workflows/generate-openapi.yml'
+#     branches:
+#       - master
+
+# jobs:
+#   generate-specs:
+#     runs-on: ubuntu-latest
+    
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
+          
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.12'
+          
+#       - name: Install uv
+#         run: |
+#           curl -LsSf https://astral.sh/uv/install.sh | sh
+#           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          
+#       - name: Set up virtual environment
+#         working-directory: ./inveniordm-rest-api
+#         run: |
+#           uv venv
+#           source .venv/bin/activate
+#           echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+#           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          
+#       - name: Install InvenioRDM CLI
+#         working-directory: ./inveniordm-rest-api
+#         run: |
+#           uv pip install invenio-cli
+          
+#       - name: Install InvenioRDM
+#         working-directory: ./inveniordm-rest-api
+#         run: |
+#           uv run invenio-cli install --pre
+          
+#       - name: Generate OpenAPI specifications
+#         working-directory: ./inveniordm-rest-api
+#         run: |
+#           echo "🚀 Starting OpenAPI spec generation..."
+          
+#           uv run invenio shell scripts/generate_spec.py
+          
+#           if [ -f "../docs/openapi.yaml" ]; then
+#             echo "✅ OpenAPI spec generated successfully"
+            
+#             TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+#             cp ../docs/openapi.yaml ../docs/openapi.yaml
+#             mkdir -p ../docs/versions
+#             cp ../docs/openapi.yaml ../docs/versions/openapi-${TIMESTAMP}.yaml
+            
+#             echo "📝 Generated files:"
+#             ls -la ../docs/openapi*.yaml ../docs/versions/ || true
+#           else
+#             echo "❌ OpenAPI spec generation failed"
+#             exit 1
+#           fi
+          
+#       - name: Commit and push generated specs
+#         run: |
+#           git config --local user.email "action@github.com"
+#           git config --local user.name "GitHub Action"
+          
+#           git add docs/openapi.yaml
+#           git add docs/versions/
+          
+#           if git diff --cached --quiet; then
+#             echo "📄 No changes to commit"
+#           else
+#             git commit -m "🤖 Auto-generate OpenAPI specs - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+#             git push
+#             echo "✅ Changes committed and pushed"
+#           fi
+          
+#       - name: Upload specs as artifacts
+#         uses: actions/upload-artifact@v4
+#         if: always()
+#         with:
+#           name: openapi-specs-${{ github.run_id }}
+#           path: |
+#             docs/openapi*.yaml
+#             docs/versions/
+#           retention-days: 90

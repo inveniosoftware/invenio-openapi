@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "inveniordm-rest-api-db",
+      "Group": "Servers",
+      "Host": "inveniordm-rest-api-db-1",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "inveniordm-rest-api",
+      "SSLMode": "prefer"
+    }
+  }
+}
